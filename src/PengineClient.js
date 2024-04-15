@@ -37,6 +37,7 @@ class PengineClient {
     */
 
     handleSuccess(response) {
+        // console.log(response);
         const queryId = response.data[0]["QueryId"];
         const success = response.data[0]["Success"] === 1;
         if (this.queryCallbacks[queryId]) {
