@@ -1,6 +1,9 @@
+/* eslint-disable no-unreachable */
 import React, { useEffect, useState } from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
+import { ReactComponent as Cuadrado } from "./cuadrado.svg";
+import { ReactComponent as Cruz } from "./cruz.svg";
 
 let pengine;
 
@@ -11,6 +14,22 @@ function Game() {
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
+
+  const ToggleButton = () => {
+    return (
+        <div className='toggle-btn'>
+            <input
+                className='toggle-input'
+                type='checkbox'
+                id='switchToggle'
+            />
+            <label className='toggle-label' for='switchToggle'>
+              <Cuadrado className='cuadrado'/>
+              <Cruz className='cruz'/>
+            </label>
+        </div>
+    );
+};
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -67,6 +86,7 @@ function Game() {
       <div className="game-info">
         {statusText}
       </div>
+      <ToggleButton/>
     </div>
   );
 }
