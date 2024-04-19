@@ -15,22 +15,6 @@ function Game() {
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
 
-  const ToggleButton = () => {
-    return (
-        <div className='toggle-btn'>
-            <input
-                className='toggle-input'
-                type='checkbox'
-                id='switchToggle'
-            />
-            <label className='toggle-label' for='switchToggle'>
-              <Cuadrado className='cuadrado'/>
-              <Cruz className='cruz'/>
-            </label>
-        </div>
-    );
-};
-
   useEffect(() => {
     // Creation of the pengine server instance.    
     // This is executed just once, after the first render.    
@@ -73,6 +57,22 @@ function Game() {
   if (!grid) {
     return null;
   }
+
+  const ToggleButton = () => {
+    return (
+        <div className='toggle-btn'>
+            <input
+                className='toggle-input'
+                type='checkbox'
+                id='switchToggle'
+            />
+            <label className='toggle-label' for='switchToggle'>
+              <Cuadrado className='cuadrado'/>
+              <Cruz className='cruz'/>
+            </label>
+        </div>
+    );
+  };
 
   const statusText = 'Keep playing!';
   return (
