@@ -69,8 +69,9 @@ body {
 
 
 .toggle-btn {
-  margin-top: 260px;
-  margin-left: -250px;
+  position: relative;
+  top: 270px;
+  right: 250px;
 }
 
 .toggle-label {
@@ -120,14 +121,16 @@ body {
 }
 
 .toggle-label svg.cuadrado {
-  top: -838px;
+  height: 18px;
+  top: 6px;
   left: 38px;
   fill: #fff;
   transition: 0.3s;
 }
 .toggle-label svg.cruz {
-  top: -385px;
-  left: 7px;
+  height: 15px;
+  top: 8px;
+  left: 8px;
   fill: #7e7e7e;
   transition: 0.3s;
 }
