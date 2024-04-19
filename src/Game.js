@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
-import { ReactComponent as Cuadrado } from "./cuadrado.svg";
-import { ReactComponent as Cruz } from "./cruz.svg";
+import { ReactComponent as Cuadrado } from "./img/cuadrado.svg";
+import { ReactComponent as Cruz } from "./img/cruz.svg";
 
 let pengine;
 
