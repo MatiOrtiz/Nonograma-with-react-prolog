@@ -64,6 +64,7 @@ body {
 }
 
 .game-info {
+  top: 50px;
   margin-left: 20px;
 }
 
