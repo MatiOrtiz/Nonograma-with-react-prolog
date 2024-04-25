@@ -19,6 +19,17 @@ body {
   text-align: center;
 }
 
+.black-square {
+  background: #24303b;
+  border: 1px solid #000000;
+  font-size: 0px;
+  font-weight: bold;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+}
+
 .board {
   display: grid;
 }
