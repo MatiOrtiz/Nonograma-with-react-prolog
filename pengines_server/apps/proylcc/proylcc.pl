@@ -41,3 +41,21 @@ put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
 	Cell == Content
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)).
+
+
+%Busca las pistas correspondientes al numero de fila o columna.
+%Caso Base: Num = 0, las pistas de la fila es el primer elemento de la lista de pistas.
+findClues(0, [H| Tail], H).
+%Caso Recursivo: Busca en la cola de la lista de pistas recursivamente.
+findClues(Num, [H | Tail], Clues):-
+	NumS is N - 1,
+	findClues(NumS, Tail, Clues).
+
+
+rowSat(RowN, Row, RowsClues,_RowSat):-
+	findClues(RowN, RowsClues, Clues).
+
+
+%TODO:
+colSat(ColN, Grid, ColsClues, _ColSat):-
+	findClues(ColN, ColsClues, Clues).
