@@ -19,17 +19,12 @@ replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
     replace(X, XIndexS, Y, Xs, XsY).
 
 
-coinciden([],[],1).
-coinciden([],_Ys,0).
-coinciden([Head|_Tail],[],0):- Head=="#".
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % put(+Content, +Pos, +RowsClues, +ColsClues, +Grid, -NewGrid, -RowSat, -ColSat).
 %
 
-put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
+put(Content, [RowN, ColN], RowsClues, _ColsClues, Grid, NewGrid, RowSat, 0):-
 	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
 	replace(Row, RowN, NewRow, Grid, NewGrid),
 
@@ -40,7 +35,8 @@ put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
 	(replace(Cell, ColN, _, Row, NewRow),
 	Cell == Content
 		;
-	replace(_Cell, ColN, Content, Row, NewRow)).
+	replace(_Cell, ColN, Content, Row, NewRow)),
+	rowSat(RowN,NewRow,RowsClues,RowSat).
 
 
 %Busca las pistas correspondientes al numero de fila o columna.
@@ -78,17 +74,9 @@ rowCounterConsec([H| Tail], Count, List, Resultado):-
 			rowCounter(Tail, List, Resultado))
 	).
 
-
-
-
-
-
-
 % Verificamos si RowSat es igual a la suma de los números en Clues.
 checkRowSat(List, Clues, RowSat) :-
-	sum_list(Clues, List),
-	(RowSat =:= Sum -> RowSat = 1 ; RowSat = 0).
-
+    (List = Clues -> RowSat = 1 ; RowSat = 0).
 
 %TODO:
 colSat(ColN, Grid, ColsClues, ColSat):-

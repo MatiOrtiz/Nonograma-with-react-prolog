@@ -55,6 +55,16 @@ function Game() {
     });
   }
 
+/* function handleRowSat(i, j) {  
+    const queryRowSat= `rowsat([${i},${j}],)`
+    pengine.query(queryRowSat,(success, response) => {
+      if(success){
+
+      }
+    }); 
+  }
+ */
+
   if (!grid) {
     return null;
   }
