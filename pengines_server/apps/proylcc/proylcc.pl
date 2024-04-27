@@ -64,22 +64,20 @@ rowSat(RowN, Row, RowsClues,RowSat):-
 rowCounter([], List, Resultado):-
 	reverse(List, Resultado).
 %Casos recursivos:
-rowCounter(["#"| Tail], List, Resultado):-
-	rowCounterConsec(Tail, 1, List, Resultado).
 rowCounter([H| Tail], List,Resultado) :-
-	rowCounter(Tail, List,Resultado).
+	(H == "#" -> rowCounterConsec(Tail, 1, List, Resultado);
+		rowCounter(Tail, List,Resultado)).
 
 
 
 rowCounterConsec([], Count, List, Resultado):-
 	rowCounter([], [Count| List], Resultado).
-rowCounterConsec(["#" | Tail], Count, List, Resultado):-
-	NCount is Count+1,
-	rowCounterConsec(Tail ,NCount, List, Resultado).
 rowCounterConsec([H| Tail], Count, List, Resultado):-
-	(Count > 0 -> rowCounter(Tail, [Count| List], Resultado);
-		rowCounter(Tail,List, Resultado)
+	(H == "#" -> Ncount is Count+1, rowCounterConsec(Tail, Ncount, List, Resultado) ; 
+		(Count > 0 -> rowCounter(Tail, [Count| List], Resultado);
+			rowCounter(Tail, List, Resultado))
 	).
+
 
 
 
@@ -114,4 +112,4 @@ colSat(ColN, Grid, ColsClues, ColSat):-
 		]
 */
 
-% proylcc:rowCounter([a, "#", "#", b, "#", "#", "#", c], [],List).
+% proylcc:rowCounter([_, "#", "#", _, "#", "#", "#", _], [],List).
