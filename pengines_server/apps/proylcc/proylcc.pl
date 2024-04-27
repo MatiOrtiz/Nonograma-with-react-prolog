@@ -40,60 +40,53 @@ put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
 	(replace(Cell, ColN, _, Row, NewRow),
 	Cell == Content
 		;
-	replace(_Cell, ColN, Content, Row, NewRow)),
-	
-	rowSat(RowN, newRow, RowsClues, RowStat).
+	replace(_Cell, ColN, Content, Row, NewRow)).
 
 
 %Busca las pistas correspondientes al numero de fila o columna.
 %Caso Base: Num = 0, las pistas de la fila es el primer elemento de la lista de pistas.
-findClues(0, [H| Tail], H).
+findClues(0, [H| _], H).
 %Caso Recursivo: Busca en la cola de la lista de pistas recursivamente.
-findClues(LineNum, [H | Tail], Clues):-
-	LineNumS is N - 1,
+findClues(_LineNum, [H | Tail], Clues):-
+	LineNumS is LineNum - 1,
 	findClues(LineNumS, Tail, Clues).
-
 
 
 
 rowSat(RowN, Row, RowsClues,RowSat):-
 	findClues(RowN, RowsClues, Clues),
-	rowCounter(Row, List),
-	checkRowSat(List, Clues, RowSat).
+	rowCounter(Row, [], Result),
+	checkRowSat(Result, Clues, RowSat).
 	%Recorrer fila y comparar.
 	
-	
-	rowCounter([], []). % Caso base: la fila está vacía.
-	rowCounter([X|Row] , List) :-
-		(X == "#"" -> rowCounterConsec(Row, Rest, 1, RestCount), List = [RestCount|Rest] ; List = Rest),
-		rowCounter(Row, Rest).
-	
-	rowCounterConsec([], [], Count, Count).
 
-	rowCounterConsec([X|Row], Rest, Count, RestCount) :-
-		(X == "#" -> NewCount is Count + 1, rowCounterConsec(Row, Rest, NewCount, RestCount) ;
-                RestCount = Count, Rest = Row).
+%Caso Base
+rowCounter([], List, Resultado):-
+	reverse(List, Resultado).
+%Casos recursivos:
+rowCounter(["#"| Tail], List, Resultado):-
+	rowCounterConsec(Tail, 1, List, Resultado).
+rowCounter([H| Tail], List,Resultado) :-
+	rowCounter(Tail, List,Resultado).
 
 
-/*
-rowCounter([], []).	
-rowCounter([H|Row], List) :-
-	(H == # -> rowCounterConsec(Row, List, 1, NewList) ;
-		 rowCounter(Row, Rest)),
-	List = NewList.
-	
 
-
-rowCounterConsec([], List, Count, NewList):-
-	Count > 0 -> NewList = [Count | List].
-rowCounterConsec([H|Row], List, Count, NewList) :-
-	(H == # -> NewCount is Count + 1, rowCounterConsec(Row, List, NewCount, NewList);
-		NewList = [Count | List],
-		rowCounter(Row, Rest)
+rowCounterConsec([], Count, List, Resultado):-
+	rowCounter([], [Count| List], Resultado).
+rowCounterConsec(["#" | Tail], Count, List, Resultado):-
+	NCount is Count+1,
+	rowCounterConsec(Tail ,NCount, List, Resultado).
+rowCounterConsec([H| Tail], Count, List, Resultado):-
+	(Count > 0 -> rowCounter(Tail, [Count| List], Resultado);
+		rowCounter(Tail,List, Resultado)
 	).
-*/	
-	
-	% Verificamos si RowSat es igual a la suma de los números en Clues.
+
+
+
+
+
+
+% Verificamos si RowSat es igual a la suma de los números en Clues.
 checkRowSat(List, Clues, RowSat) :-
 	sum_list(Clues, List),
 	(RowSat =:= Sum -> RowSat = 1 ; RowSat = 0).
@@ -121,4 +114,4 @@ colSat(ColN, Grid, ColsClues, ColSat):-
 		]
 */
 
-% proylcc:rowCounter([a, "#", "#", b, "#", "#", "#", c], List).
+% proylcc:rowCounter([a, "#", "#", b, "#", "#", "#", c], [],List).
