@@ -50,6 +50,11 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
+        /* let rowSat= response['RowSat'];
+        if(rowSat===1){
+          let pista= rowsClues[i];
+          pista.lineaSat(rowSat);
+        } */
       }
       setWaiting(false);
     });
