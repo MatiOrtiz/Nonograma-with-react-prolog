@@ -85,6 +85,22 @@ colSat(ColN, Grid, ColsClues, ColSat):-
 
 %gameStatus(Grid)
 
+% Predicado principal para obtener las columnas de la grilla
+columnas([], []).
+columnas(Grilla, [Columna|RestoColumnas]) :-
+    primeros(Grilla, Columna),
+    restos(Grilla, RestoFilas),
+    columnas(RestoFilas, RestoColumnas).
+
+% Predicado para obtener el primer elemento de cada lista (columna)
+primeros([], []).
+primeros([[X|Resto]|Filas], [X|ColumnaResto]) :-
+    primeros(Filas, ColumnaResto).
+
+% Predicado para obtener el resto de elementos de cada lista (columna)
+restos([], []).
+restos([[X|Resto]|Filas], [Resto|RestoColumna]) :-
+    restos(Filas, RestoColumna).
 
 
 /*
