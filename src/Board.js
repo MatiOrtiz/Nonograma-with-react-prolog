@@ -2,7 +2,7 @@ import React from 'react';
 import Square from './Square';
 import Clue from './Clue';
 
-function Board({ grid, rowsClues, colsClues, onClick }) {
+function Board({ grid, rowsClues, colsClues, onClick, rowSat }) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
     return (
@@ -36,7 +36,7 @@ function Board({ grid, rowsClues, colsClues, onClick }) {
                     }}
                 >
                     {rowsClues.map((clue, i) =>
-                        <Clue clue={clue} key={i} />
+                        <Clue clue={clue} key={i} done={rowSat}/>
                     )}
                 </div>
                 <div className="board"

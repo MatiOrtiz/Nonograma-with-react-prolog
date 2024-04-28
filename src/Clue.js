@@ -1,12 +1,8 @@
 import React from 'react';
 
-function Clue({ clue }) {
-    const className= 'clue';
-    function lineaSat(i){
-        className= i === 1 ? 'clueSat' : 'clue';
-    }
+function Clue({ clue,done }) {
     return (
-        <div className={className} >
+        <div className={`${done ? 'clueSat' : 'clue'}`} >
             {clue.map((num, i) =>
                 <div key={i}>
                     {num}

@@ -15,6 +15,7 @@ function Game() {
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [useX, setUseX] = useState(false);
+  const [rowSat, setRowSat] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -50,25 +51,17 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
-        /* let rowSat= response['RowSat'];
-        if(rowSat===1){
-          let pista= rowsClues[i];
-          pista.lineaSat(rowSat);
+        setRowSat(response['RowSat']);
+
+        /* if (success) {
+          setGrid(response['Grid']);
+          setRowsClues(response['RowClues']);
+          setColsClues(response['ColumClues']);
         } */
       }
       setWaiting(false);
     });
   }
-
-/* function handleRowSat(i, j) {  
-    const queryRowSat= `rowsat([${i},${j}],)`
-    pengine.query(queryRowSat,(success, response) => {
-      if(success){
-
-      }
-    }); 
-  }
- */
 
   if (!grid) {
     return null;
@@ -99,6 +92,7 @@ function Game() {
         rowsClues={rowsClues}
         colsClues={colsClues}
         onClick={(i, j) => handleClick(i, j)}
+        rowSat={rowSat}
       />
       <div className="game-info">
         {statusText}
