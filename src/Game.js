@@ -16,6 +16,7 @@ function Game() {
   const [waiting, setWaiting] = useState(false);
   const [useX, setUseX] = useState(false);
   const [rowSat, setRowSat] = useState([]);
+  const [colSat, setColSat] = useState([]);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -58,6 +59,11 @@ function Game() {
         } else {
           setRowSat(rowSat.filter(e => e !== i));
         }
+        if(response['ColSat']) {
+          setColSat([...colSat, j]);
+        } else {
+          setColSat(colSat.filter(e => e !== j));
+        }
       }
       setWaiting(false);
     });
@@ -93,6 +99,7 @@ function Game() {
         colsClues={colsClues}
         onClick={(i, j) => handleClick(i, j)}
         rowSat={rowSat}
+        colSat={colSat}
       />
       <div className="game-info">
         {statusText}
