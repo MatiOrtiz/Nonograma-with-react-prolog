@@ -43,7 +43,7 @@ put(Content, [RowN, ColN], RowsClues, _ColsClues, Grid, NewGrid, RowSat, 0):-
 %Caso Base: Num = 0, las pistas de la fila es el primer elemento de la lista de pistas.
 findClues(0, [H| _], H).
 %Caso Recursivo: Busca en la cola de la lista de pistas recursivamente.
-findClues(_LineNum, [H | Tail], Clues):-
+findClues(LineNum, [H | Tail], Clues):-
 	LineNumS is LineNum - 1,
 	findClues(LineNumS, Tail, Clues).
 

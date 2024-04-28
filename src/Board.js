@@ -36,7 +36,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowSat }) {
                     }}
                 >
                     {rowsClues.map((clue, i) =>
-                        <Clue clue={clue} key={i} done={rowSat}/>
+                        <Clue clue={clue} key={i} done={rowSat.includes(i)}/>
                     )}
                 </div>
                 <div className="board"
