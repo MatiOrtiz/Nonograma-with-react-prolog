@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Clue({ clue,done }) {
+function Clue({ clue,checked }) {
     return (
-        <div className={`${done ? 'clueSat' : 'clue'}`} >
+        <div className={`${checked ? 'clueSat' : 'clue'}`} >
             {clue.map((num, i) =>
                 <div key={i}>
                     {num}

@@ -23,7 +23,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowSat, colSat }) {
             >
                 <div>{/* top-left corner square */}</div>
                 {colsClues.map((clue, i) =>
-                    <Clue clue={clue} key={i} done={colSat.includes(i)} />
+                    <Clue clue={clue} key={i} checked={colSat.includes(i)} />
                 )}
             </div>
             <div className="horizontal">
@@ -36,7 +36,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowSat, colSat }) {
                     }}
                 >
                     {rowsClues.map((clue, i) =>
-                        <Clue clue={clue} key={i} done={rowSat.includes(i)}/>
+                        <Clue clue={clue} key={i} checked={rowSat.includes(i)}/>
                     )}
                 </div>
                 <div className="board"
