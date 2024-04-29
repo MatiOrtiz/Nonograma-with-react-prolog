@@ -24,7 +24,7 @@ replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
 % put(+Content, +Pos, +RowsClues, +ColsClues, +Grid, -NewGrid, -RowSat, -ColSat).
 %
 
-put(Content, [RowN, ColN], RowsClues, _ColsClues, Grid, NewGrid, RowSat, 0):-
+put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
 	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
 	replace(Row, RowN, NewRow, Grid, NewGrid),
 
@@ -36,71 +36,70 @@ put(Content, [RowN, ColN], RowsClues, _ColsClues, Grid, NewGrid, RowSat, 0):-
 	Cell == Content
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)),
-	rowSat(RowN,NewRow,RowsClues,RowSat).
+	rowSat(RowN,NewRow,RowsClues,RowSat),
+	colSat(ColN, Grid,ColsClues, ColSat).
 
 
 %Busca las pistas correspondientes al numero de fila o columna.
 %Caso Base: Num = 0, las pistas de la fila es el primer elemento de la lista de pistas.
 findClues(0, [H| _], H).
 %Caso Recursivo: Busca en la cola de la lista de pistas recursivamente.
-findClues(LineNum, [H | Tail], Clues):-
+findClues(LineNum, [_H | Tail], Clues):-
 	LineNumS is LineNum - 1,
 	findClues(LineNumS, Tail, Clues).
 
 
-
+%RowSat = 1 Si la fila N satisface las pistas.
 rowSat(RowN, Row, RowsClues,RowSat):-
 	findClues(RowN, RowsClues, Clues),
-	rowCounter(Row, [], Result),
-	checkRowSat(Result, Clues, RowSat).
-	%Recorrer fila y comparar.
+	lineCounter(Row, [], List),
+	checkLineSat(List, Clues, RowSat).
 	
-
+%Predicado para transformar el estado actual de una linea a una lista.
 %Caso Base
-rowCounter([], List, Resultado):-
+lineCounter([], List, Resultado):-
 	reverse(List, Resultado).
 %Casos recursivos:
-rowCounter([H| Tail], List,Resultado) :-
-	(H == "#" -> rowCounterConsec(Tail, 1, List, Resultado);
-		rowCounter(Tail, List,Resultado)).
+lineCounter([H| Tail], List,Resultado) :-
+	(H == "#" -> lineCounterConsec(Tail, 1, List, Resultado);
+		lineCounter(Tail, List,Resultado)).
 
-
-
-rowCounterConsec([], Count, List, Resultado):-
-	rowCounter([], [Count| List], Resultado).
-rowCounterConsec([H| Tail], Count, List, Resultado):-
-	(H == "#" -> Ncount is Count+1, rowCounterConsec(Tail, Ncount, List, Resultado) ; 
-		(Count > 0 -> rowCounter(Tail, [Count| List], Resultado);
-			rowCounter(Tail, List, Resultado))
+lineCounterConsec([], Count, List, Resultado):-
+	lineCounter([], [Count| List], Resultado).
+lineCounterConsec([H| Tail], Count, List, Resultado):-
+	(H == "#" -> Ncount is Count+1, lineCounterConsec(Tail, Ncount, List, Resultado) ; 
+		(Count > 0 -> lineCounter(Tail, [Count| List], Resultado);
+			lineCounter(Tail, List, Resultado))
 	).
 
-% Verificamos si RowSat es igual a la suma de los números en Clues.
-checkRowSat(List, Clues, RowSat) :-
-    (List = Clues -> RowSat = 1 ; RowSat = 0).
 
-%TODO:
+% LineSat = 1 si el estado de la lista coincide con las pistas.
+checkLineSat(List, Clues, LineSat) :-
+    (List = Clues -> LineSat = 1 ; LineSat = 0).
+
+
+%ColSat = 1 si la columna N satisface las pistas.
 colSat(ColN, Grid, ColsClues, ColSat):-
-	findClues(ColN, ColsClues, Clues).
-	%Recorrer columna y comparar.
+	findClues(ColN, ColsClues, Clues),
+	getColN(ColN, Grid, [], Col),
+	lineCounter(Col, [], List),
+	checkLineSat(List, Clues, ColSat).
 
-%gameStatus(Grid)
+%Transforma una columna en una lista.
+%Caso Base:
+getColN(_ColN, [], List, Col):-
+	reverse(List, Col).
+%Caso Recursivo:
+getColN(ColN, [H| RestoDeGrilla], List, Col) :-
+	getByIndex(ColN, H, Item),
+	getColN(ColN, RestoDeGrilla, [Item| List], Col).
+	
 
-% Predicado principal para obtener las columnas de la grilla
-columnas([], []).
-columnas(Grilla, [Columna|RestoColumnas]) :-
-    primeros(Grilla, Columna),
-    restos(Grilla, RestoFilas),
-    columnas(RestoFilas, RestoColumnas).
-
-% Predicado para obtener el primer elemento de cada lista (columna)
-primeros([], []).
-primeros([[X|Resto]|Filas], [X|ColumnaResto]) :-
-    primeros(Filas, ColumnaResto).
-
-% Predicado para obtener el resto de elementos de cada lista (columna)
-restos([], []).
-restos([[X|Resto]|Filas], [Resto|RestoColumna]) :-
-    restos(Filas, RestoColumna).
+%Recupera el elemento N-esimo de una lista.
+getByIndex(0, [H| _Tail], H).	
+getByIndex(N, [_H| Tail], Item) :-
+	NS is N - 1,
+	getByIndex(NS, Tail, Item).
 
 
 /*
@@ -108,12 +107,12 @@ restos([[X|Resto]|Filas], [Resto|RestoColumna]) :-
 
 		[[2], [5], [1,3], [5], [4]],  PistasColumnas
 
+% Grilla
 		[["#", _ , # , # , _ ],
 		 ["X", _ ,"X", _ , _ ],
-		 ["X", _ , _ , _ , _ ], % Grilla
+		 ["X", _ , _ , _ , _ ], 
 		 ["#","#","#", _ , _ ],
 		 [ _ , _ ,"#","#","#"]
 		]
 */
 
-% proylcc:rowCounter([_, "#", "#", _, "#", "#", "#", _], [],List).
