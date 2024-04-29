@@ -36,8 +36,8 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 	Cell == Content
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)),
-	rowSat(RowN,NewRow,RowsClues,RowSat),
-	colSat(ColN, Grid,ColsClues, ColSat).
+	rowSat(RowN, NewRow, RowsClues, RowSat),
+	colSat(ColN, NewGrid, ColsClues, ColSat).
 
 
 %Busca las pistas correspondientes al numero de fila o columna.
@@ -50,7 +50,7 @@ findClues(LineNum, [_H | Tail], Clues):-
 
 
 %RowSat = 1 Si la fila N satisface las pistas.
-rowSat(RowN, Row, RowsClues,RowSat):-
+rowSat(RowN, Row, RowsClues, RowSat):-
 	findClues(RowN, RowsClues, Clues),
 	lineCounter(Row, [], List),
 	checkLineSat(List, Clues, RowSat).
@@ -102,17 +102,57 @@ getByIndex(N, [_H| Tail], Item) :-
 	getByIndex(NS, Tail, Item).
 
 
+
+
+checkStatus(RowsClues, ColsClues, [H| Tail], Status):-
+	length([H| Tail], GridSize),
+	GridSizeS is GridSize - 1,
+	(checkFilas(0, RowsClues,[H| Tail]), checkColumns(GridSizeS, ColsClues, [H| Tail]) -> Status = 1 
+		; Status = 0).
+	
+	
+
+%Caso Base:
+checkFilas(_RowN, _RowsClues, []).
+%Caso Recursivo
+checkFilas(RowN, RowsClues, [H| Tail]):-
+	rowSat(RowN, H, RowsClues, RowSat),
+	(RowSat == 1 -> RowNS is RowN + 1,
+		checkFilas(RowNS, RowsClues, Tail)).
+
+
+%Caso Base:
+checkColumns(0, ColsClues, Grid):-
+	colSat(0, Grid, ColsClues, ColSat),
+	ColSat == 1.
+%Caso Recursivo
+checkColumns(ColN, ColsClues, Grid):-
+	colSat(ColN, Grid, ColsClues, ColSat),
+	(ColSat == 1 -> ColNS is ColN - 1,
+		checkColumns(ColNS, ColsClues, Grid)).
+
+
+
+
 /*
 		[[3], [1,2], [4], [5], [5]],  PistasFilas
 
 		[[2], [5], [1,3], [5], [4]],  PistasColumnas
 
 % Grilla
-		[["#", _ , # , # , _ ],
-		 ["X", _ ,"X", _ , _ ],
-		 ["X", _ , _ , _ , _ ], 
-		 ["#","#","#", _ , _ ],
-		 [ _ , _ ,"#","#","#"]
+		[["X", "#", "#", "X", "X" ],
+		 ["X", "#", "X", "X", "X" ],
+		 ["X", "#", "#", "X", "#" ], 
+		 ["#", "#", "#", "#", "#" ],
+		 ["#", "#", "#", "#", "#"]
 		]
 */
 
+% proylcc:put("#", [0,1],[[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]],  [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ], GrillaRes, RowSat, ColSat).
+% proylcc:checkStaus([[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ], Status ).
+% proylcc:checkStatus( [ [2], [1], [2, 1], [3], [5] ], [ [2], [5], [1,3], [1], [1, 1] ], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"]] , Status ).
+
+% proylcc:checkFilas(0, [ [2],[1], [2, 1], [3], [5] ], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ])
+% proylcc:checkFilas(0, [ [2],[1], [2, 1], [3], [5] ], [ ["#", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ]) 
+
+% proylcc:checkColumns(4, [ [2], [5], [1, 3], [5], [4] ], [ ["X", "#", "#", "#", "X", "X"], ["X", "#", "X", "#", "#"], ["X", "#", "#", "#", "#"], ["#", "#", "#", "#", "#"], ["#", "#", "#", "#","#"] ]).
