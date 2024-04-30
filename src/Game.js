@@ -18,6 +18,8 @@ function Game() {
   const [rowSat, setRowSat] = useState([]);
   const [colSat, setColSat] = useState([]);
   const [statusText, setStatusText] = useState('Keep playing');
+  const [handleClickEnabled, setHandleClickEnabled] = useState(true);
+
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -40,7 +42,7 @@ function Game() {
 
   function handleClick(i, j) {
     // No action on click if we are waiting.
-    if (waiting) {
+    if (waiting || !handleClickEnabled) {
       return;
     }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
@@ -84,6 +86,9 @@ function Game() {
           if(status === 1){
             //Fin del juego.
             setStatusText('Winner!');
+            setHandleClickEnabled(false);
+          } else {
+            setHandleClickEnabled(true);
           }
       }
     });

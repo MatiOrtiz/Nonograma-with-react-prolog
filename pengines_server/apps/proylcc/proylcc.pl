@@ -25,19 +25,20 @@ replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
 %
 
 put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
-	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
-	replace(Row, RowN, NewRow, Grid, NewGrid),
-
-	% NewRow is the result of replacing the cell Cell in position ColN of Row by _,
-	% if Cell matches Content (Cell is instantiated in the call to replace/5).	
-	% Otherwise (;)
-	% NewRow is the result of replacing the cell in position ColN of Row by Content (no matter its content: _Cell).			
-	(replace(Cell, ColN, _, Row, NewRow),
-	Cell == Content
-		;
-	replace(_Cell, ColN, Content, Row, NewRow)),
-	rowSat(RowN, NewRow, RowsClues, RowSat),
-	colSat(ColN, NewGrid, ColsClues, ColSat).
+    checkStatus(RowsClues, ColsClues, Grid, Status),
+    (Status == 1 ->
+        % Si el estado es 1, no se realiza ninguna acción y se mantienen los valores de entrada.
+        NewGrid = Grid,
+        RowSat = 0,
+        ColSat = 0
+    ;   % Si el estado es 0, se ejecuta el resto del predicado normalmente.
+        replace(Row, RowN, NewRow, Grid, NewGrid),
+        (replace(Cell, ColN, _, Row, NewRow), Cell == Content
+        ;
+        replace(_Cell, ColN, Content, Row, NewRow)),
+        rowSat(RowN, NewRow, RowsClues, RowSat),
+        colSat(ColN, NewGrid, ColsClues, ColSat)
+    ).
 
 
 %Busca las pistas correspondientes al numero de fila o columna.
