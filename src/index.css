@@ -61,11 +61,8 @@ body {
   padding: 3px;
 }
 
-.clue div {
-  margin: 2px
-}
-
 .clueSat {
+  color: #777;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -75,7 +72,20 @@ body {
   padding: 3px;
 }
 
+.clue div {
+  margin: 2px;
+}
+
+.clueSat div{
+  margin: 2px;
+}
+
+
 .colClues .clue {
+  flex-direction: column;
+}
+
+.colClues .clueSat{
   flex-direction: column;
 }
 

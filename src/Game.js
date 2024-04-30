@@ -17,6 +17,7 @@ function Game() {
   const [useX, setUseX] = useState(false);
   const [rowSat, setRowSat] = useState([]);
   const [colSat, setColSat] = useState([]);
+  const [statusText, setStatusText] = useState('Keep playing');
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -52,8 +53,7 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
-        /* setRowSat(response['RowSat']); */
-
+  
         if(response['RowSat']) {
           setRowSat([...rowSat, i]);
         } else {
@@ -64,10 +64,31 @@ function Game() {
         } else {
           setColSat(colSat.filter(e => e !== j));
         }
+        checkGameStatus(response['ResGrid']);
       }
       setWaiting(false);
     });
+    
+    
   }
+
+
+  function checkGameStatus(grid){
+    const squaresS = JSON.stringify(grid).replaceAll('"_"', '_');
+    const rowsCluesS = JSON.stringify(rowsClues);
+    const colsCluesS = JSON.stringify(colsClues);
+    const queryStatus =  `checkStatus( ${rowsCluesS}, ${colsCluesS}, ${squaresS}, Status)`;
+    pengine.query(queryStatus, (success, response) => {
+      if (success) {
+          const status = response['Status'];
+          if(status === 1){
+            //Fin del juego.
+            setStatusText('Winner!');
+          }
+      }
+    });
+  }
+
 
   if (!grid) {
     return null;
@@ -89,7 +110,7 @@ function Game() {
     );
   };
 
-  const statusText = 'Keep playing!';
+  
 
   return (
     <div className="game">
