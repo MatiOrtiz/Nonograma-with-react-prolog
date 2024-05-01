@@ -135,12 +135,12 @@ body {
   visibility: hidden;
 }
 .toggle-input:checked + .toggle-label {
-  background: #242424;
+  background: #51557E;
 }
 .toggle-input:checked + .toggle-label:after {
   left: 62px;
   transform: translateX(-100%);
-  background: linear-gradient(180deg, #777, #3a3a3a);
+  background: linear-gradient(180deg, #777, #1B2430);
 }
 .toggle-label:active:after {
   width: 30px;
