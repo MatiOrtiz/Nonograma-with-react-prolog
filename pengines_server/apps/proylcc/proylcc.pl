@@ -102,9 +102,7 @@ getByIndex(N, [_H| Tail], Item) :-
 	NS is N - 1,
 	getByIndex(NS, Tail, Item).
 
-
-
-
+%
 checkStatus(RowsClues, ColsClues, [H| Tail], Status):-
 	length([H| Tail], GridSize),
 	GridSizeS is GridSize - 1,
@@ -133,7 +131,18 @@ checkColumns(ColN, ColsClues, Grid):-
 		checkColumns(ColNS, ColsClues, Grid)).
 
 
+%Elimina todas las cruces de la grilla para mostrar el dibujo
+endOfGame([], []).
+endOfGame([H| Tail], [NH| NewGrid]):-
+	fillWithXs(H, NH),
+	endOfGame(Tail, NewGrid).
 
+%Completa los espacios vacios agregando una "X"
+fillWithXs([],[]).
+fillWithXs(['_'| Tail], ["X"| NewTail]):-
+	fillWithXs(Tail, NewTail).
+fillWithXs([H| Tail], [H| NewTail]):-
+	fillWithXs(Tail, NewTail).
 
 /*
 		[[3], [1,2], [4], [5], [5]],  PistasFilas
@@ -148,12 +157,3 @@ checkColumns(ColN, ColsClues, Grid):-
 		 ["#", "#", "#", "#", "#"]
 		]
 */
-
-% proylcc:put("#", [0,1],[[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]],  [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ], GrillaRes, RowSat, ColSat).
-% proylcc:checkStaus([[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ], Status ).
-% proylcc:checkStatus( [ [2], [1], [2, 1], [3], [5] ], [ [2], [5], [1,3], [1], [1, 1] ], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"]] , Status ).
-
-% proylcc:checkFilas(0, [ [2],[1], [2, 1], [3], [5] ], [ ["X", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ])
-% proylcc:checkFilas(0, [ [2],[1], [2, 1], [3], [5] ], [ ["#", "#", "#", "X", "X"], ["X", "#", "X", "X", "X"], ["X", "#", "#", "X", "#"], ["#", "#", "#", "X", "X"], ["#", "#", "#", "#", "#"] ]) 
-
-% proylcc:checkColumns(4, [ [2], [5], [1, 3], [5], [4] ], [ ["X", "#", "#", "#", "X", "X"], ["X", "#", "X", "#", "#"], ["X", "#", "#", "#", "#"], ["#", "#", "#", "#", "#"], ["#", "#", "#", "#","#"] ]).

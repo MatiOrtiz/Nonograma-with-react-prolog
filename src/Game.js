@@ -87,12 +87,23 @@ function Game() {
             //Fin del juego.
             setStatusText('Winner!');
             setHandleClickEnabled(false);
+            showDibujo(grid);
           } else {
             setHandleClickEnabled(true);
           }
       }
     });
   }
+
+function showDibujo(grid){
+  const squaresS = JSON.stringify(grid).replaceAll('"_"', '_');
+  const queryS = `endOfGame(${squaresS}, NewGrid)`;
+  pengine.query(queryS, (success, response) => {
+    if (success) {
+      setGrid(response['NewGrid']);
+    }
+  });
+}
 
 
   if (!grid) {
