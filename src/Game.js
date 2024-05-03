@@ -87,7 +87,7 @@ function Game() {
             //Fin del juego.
             setStatusText('Winner!');
             setHandleClickEnabled(false);
-            showDibujo(grid);
+            completeGrid(grid);
           } else {
             setHandleClickEnabled(true);
           }
@@ -95,9 +95,9 @@ function Game() {
     });
   }
 
-function showDibujo(grid){
+function completeGrid(grid){
   const squaresS = JSON.stringify(grid).replaceAll('"_"', '_');
-  const queryS = `endOfGame(${squaresS}, NewGrid)`;
+  const queryS = `completeGrid(${squaresS}, NewGrid)`;
   pengine.query(queryS, (success, response) => {
     if (success) {
       setGrid(response['NewGrid']);
