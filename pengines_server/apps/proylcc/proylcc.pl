@@ -41,26 +41,25 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
     ).
 
 
-%Busca las pistas correspondientes al numero de fila o columna.
-%Caso Base: Num = 0, las pistas de la fila es el primer elemento de la lista de pistas.
-findClues(0, [H| _], H).
-%Caso Recursivo: Busca en la cola de la lista de pistas recursivamente.
-findClues(LineNum, [_H | Tail], Clues):-
-	LineNumS is LineNum - 1,
-	findClues(LineNumS, Tail, Clues).
+%Recupera el elemento N-esimo de una lista.
+getByIndex(0, [H| _Tail], H).	
+getByIndex(N, [_H| Tail], Item) :-
+	NS is N - 1,
+	getByIndex(NS, Tail, Item).
 
 
 %RowSat = 1 Si la fila N satisface las pistas.
 rowSat(RowN, Row, RowsClues, RowSat):-
-	findClues(RowN, RowsClues, Clues),
+	getByIndex(RowN, RowsClues, Clues),
 	lineCounter(Row, [], List),
 	checkLineSat(List, Clues, RowSat).
 	
+
 %Predicado para transformar el estado actual de una linea a una lista.
-%Caso Base
+%Caso Base:
 lineCounter([], List, Resultado):-
 	reverse(List, Resultado).
-%Casos recursivos:
+%Casos recursivos0
 lineCounter([H| Tail], List,Resultado) :-
 	(H == "#" -> lineCounterConsec(Tail, 1, List, Resultado);
 		lineCounter(Tail, List,Resultado)).
@@ -81,10 +80,11 @@ checkLineSat(List, Clues, LineSat) :-
 
 %ColSat = 1 si la columna N satisface las pistas.
 colSat(ColN, Grid, ColsClues, ColSat):-
-	findClues(ColN, ColsClues, Clues),
+	getByIndex(ColN, ColsClues, Clues),
 	getColN(ColN, Grid, [], Col),
 	lineCounter(Col, [], List),
 	checkLineSat(List, Clues, ColSat).
+
 
 %Transforma una columna en una lista.
 %Caso Base:
@@ -96,20 +96,13 @@ getColN(ColN, [H| RestoDeGrilla], List, Col) :-
 	getColN(ColN, RestoDeGrilla, [Item| List], Col).
 	
 
-%Recupera el elemento N-esimo de una lista.
-getByIndex(0, [H| _Tail], H).	
-getByIndex(N, [_H| Tail], Item) :-
-	NS is N - 1,
-	getByIndex(NS, Tail, Item).
-
-%
+%Status = 1 si se satisfacen las pistas de todas las filas y todas las columnas.
 checkStatus(RowsClues, ColsClues, [H| Tail], Status):-
 	length([H| Tail], GridSize),
 	GridSizeS is GridSize - 1,
 	(checkFilas(0, RowsClues,[H| Tail]), checkColumns(GridSizeS, ColsClues, [H| Tail]) -> Status = 1 
 		; Status = 0).
-	
-	
+		
 
 %Caso Base:
 checkFilas(_RowN, _RowsClues, []).
@@ -132,10 +125,11 @@ checkColumns(ColN, ColsClues, Grid):-
 
 
 %Elimina todas las cruces de la grilla para mostrar el dibujo
-endOfGame([], []).
-endOfGame([H| Tail], [NH| NewGrid]):-
+completeGrid([], []).
+completeGrid([H| Tail], [NH| NewGrid]):-
 	fillWithXs(H, NH),
-	endOfGame(Tail, NewGrid).
+	completeGrid(Tail, NewGrid).
+
 
 %Completa los espacios vacios agregando una "X"
 fillWithXs([],[]).
@@ -143,17 +137,3 @@ fillWithXs(['_'| Tail], ["X"| NewTail]):-
 	fillWithXs(Tail, NewTail).
 fillWithXs([H| Tail], [H| NewTail]):-
 	fillWithXs(Tail, NewTail).
-
-/*
-		[[3], [1,2], [4], [5], [5]],  PistasFilas
-
-		[[2], [5], [1,3], [5], [4]],  PistasColumnas
-
-% Grilla
-		[["X", "#", "#", "X", "X" ],
-		 ["X", "#", "X", "X", "X" ],
-		 ["X", "#", "#", "X", "#" ], 
-		 ["#", "#", "#", "#", "#" ],
-		 ["#", "#", "#", "#", "#"]
-		]
-*/
