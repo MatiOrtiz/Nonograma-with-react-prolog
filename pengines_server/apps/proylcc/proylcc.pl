@@ -137,3 +137,38 @@ fillWithXs(['_'| Tail], ["X"| NewTail]):-
 	fillWithXs(Tail, NewTail).
 fillWithXs([H| Tail], [H| NewTail]):-
 	fillWithXs(Tail, NewTail).
+
+
+
+
+
+% proylcc:solveAllRows(5, 5, [[3], [1,2], [4], [5], [5]], Solution).
+solveAllRows(_ , 0, _, []).
+%Queda invertir la solución.
+
+solveAllRows(RowSize, RowN, RowsClues, [RowSolution| Rest]):-
+	RowNS is RowN - 1,
+	solveRow(RowSize, RowNS, RowsClues, RowSolution),
+	solveAllRows(RowSize, RowNS, RowsClues, Rest).
+	
+
+
+
+% proylcc:solveRow(5, 0, [[3], [1,2], [4], [5], [5]], RowSolution).
+solveRow(RowSize, RowN, RowsClues, RowSolution):-
+	getByIndex(RowN, RowsClues, Clues),
+	generateLine(RowSize, RowSolution),
+	lineCounter(RowSolution, [], List),
+	checkLineSat(List, Clues, LineSat),
+	LineSat = 1.
+
+%Invoca a generateLineRec.
+generateLine(N, Line) :-
+    length(Line, N),		%Crea una lista vacía de N elementos
+    generateLineRec(Line).
+
+%Genera todas las posibles combinaciones de una línea.
+generateLineRec([]).
+generateLineRec([H|T]) :-
+    member(H, ["#", _]),      %Cada posición puede ser # o _
+    generateLineRec(T).       %Genera recursivamente el resto de la lista
