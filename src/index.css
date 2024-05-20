@@ -171,3 +171,77 @@ body {
 .toggle-input:checked + .toggle-label svg.cruz {
   fill: #fff;
 }
+
+.toggle-clue-btn{
+
+}
+
+.toggle-clue-label{
+  width: 65px;
+  height: 30px;
+  position: relative;
+  display: block;
+  background: #ebebeb;
+  border-radius: 200px;
+  box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.4),
+      inset 0px -5px 15px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle-clue-label:after {
+  content: "";
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background: linear-gradient(180deg, #b9d6e0, #435585);
+  border-radius: 180px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.toggle-clue-input {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.toggle-clue-input:checked + .toggle-clue-label {
+  background: #51557E;
+}
+.toggle-clue-input:checked + .toggle-clue-label:after {
+  left: 62px;
+  transform: translateX(-100%);
+  background: linear-gradient(180deg, #777, #1B2430);
+}
+.toggle-clue-label:active:after {
+  width: 30px;
+}
+
+.toggle-clue-label svg {
+  position: absolute;
+  width: 25px;
+}
+
+.toggle-clue-label svg.visible {
+  height: 18px;
+  top: 6px;
+  left: 33px;
+  fill: #fff;
+  transition: 0.3s;
+}
+.toggle-clue-label svg.oculto {
+  height: 15px;
+  top: 8px;
+  left: 7px;
+  fill: #7e7e7e;
+  transition: 0.3s;
+}
+.toggle-clue-input:checked + .toggle-clue-label svg.visible {
+  fill: #7e7e7e;
+}
+.toggle-clue-input:checked + .toggle-clue-label svg.oculto {
+  fill: #fff;
+}

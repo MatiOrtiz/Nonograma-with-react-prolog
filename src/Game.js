@@ -4,6 +4,8 @@ import PengineClient from './PengineClient';
 import Board from './Board';
 import { ReactComponent as Cuadrado } from "./img/cuadrado.svg";
 import { ReactComponent as Cruz } from "./img/cruz.svg";
+import { ReactComponent as Visible} from "./img/visible.svg"
+import { ReactComponent as Oculto} from "./img/oculto.svg"
 
 let pengine;
 
@@ -15,6 +17,7 @@ function Game() {
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [useX, setUseX] = useState(false);
+  const [viewClues, setViewClues]= useState(false);
   const [rowSat, setRowSat] = useState([]);
   const [colSat, setColSat] = useState([]);
   const [statusText, setStatusText] = useState('Keep playing');
@@ -114,6 +117,10 @@ function completeGrid(grid){
     setUseX((prev) => !prev);
   };
 
+  const handleCheckboxClueChange = () => {
+    setViewClues((prev) => !prev);
+  };
+
   const ToggleButton = () => {
     return (
       <div className='toggle-btn'>
@@ -121,6 +128,18 @@ function completeGrid(grid){
         <label className='toggle-label' htmlFor='switchToggle'>
           <Cuadrado className='cuadrado'/>
           <Cruz className='cruz'/>
+        </label>
+      </div>
+    );
+  };
+
+  const ToggleButtonClue = () => {
+    return (
+      <div className='toggle-clue-btn'>
+        <input className='toggle-clue-input' type='checkbox' id='switchToggleClue' onChange={handleCheckboxClueChange} checked={viewClues}/>
+        <label className='toggle-clue-label' htmlFor='switchToggleClue'>
+          <Visible className='visible'/>
+          <Oculto className='oculto'/>
         </label>
       </div>
     );
@@ -142,6 +161,7 @@ function completeGrid(grid){
         {statusText}
       </div>
       <ToggleButton/>
+      <ToggleButtonClue/>
     </div>
   );
 }
