@@ -102,7 +102,7 @@ body {
 .toggle-btn {
   position: relative;
   top: 270px;
-  right: 250px;
+  right: 229px;
 }
 
 .toggle-label {
@@ -172,11 +172,13 @@ body {
   fill: #fff;
 }
 
-.toggle-clue-btn{
-
+.toggle-table-btn{
+  position: relative;
+  top: 270px;
+  right: 375px;
 }
 
-.toggle-clue-label{
+.toggle-table-label{
   width: 65px;
   height: 30px;
   position: relative;
@@ -189,7 +191,7 @@ body {
   transition: 0.3s;
 }
 
-.toggle-clue-label:after {
+.toggle-table-label:after {
   content: "";
   width: 25px;
   height: 25px;
@@ -202,46 +204,68 @@ body {
   transition: 0.3s;
 }
 
-.toggle-clue-input {
+.toggle-table-input {
   width: 0;
   height: 0;
   visibility: hidden;
 }
 
-.toggle-clue-input:checked + .toggle-clue-label {
+.toggle-table-input:checked + .toggle-table-label {
   background: #51557E;
 }
-.toggle-clue-input:checked + .toggle-clue-label:after {
+.toggle-table-input:checked + .toggle-table-label:after {
   left: 62px;
   transform: translateX(-100%);
   background: linear-gradient(180deg, #777, #1B2430);
 }
-.toggle-clue-label:active:after {
+.toggle-table-label:active:after {
   width: 30px;
 }
 
-.toggle-clue-label svg {
+.toggle-table-label svg {
   position: absolute;
   width: 25px;
 }
 
-.toggle-clue-label svg.visible {
-  height: 18px;
+.toggle-table-label svg.visible {
+  height: 20px;
   top: 6px;
-  left: 33px;
-  fill: #fff;
+  left: 35px;
+  fill: #000000;
   transition: 0.3s;
 }
-.toggle-clue-label svg.oculto {
-  height: 15px;
-  top: 8px;
-  left: 7px;
+.toggle-table-label svg.oculto {
+  height: 20px;
+  top: 5px;
+  left: 5px;
   fill: #7e7e7e;
   transition: 0.3s;
 }
-.toggle-clue-input:checked + .toggle-clue-label svg.visible {
+.toggle-table-input:checked + .toggle-table-label svg.visible {
   fill: #7e7e7e;
 }
-.toggle-clue-input:checked + .toggle-clue-label svg.oculto {
+.toggle-table-input:checked + .toggle-table-label svg.oculto {
   fill: #fff;
+}
+
+.clue-btn{
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  border-color: #fffab77d;
+  position: relative;
+  top: 283px;
+  right: 280px;
+  background: #FFFAB7;
+}
+
+.clue-btn svg {
+  position: relative;
+  width: 30px;
+  right: 3px;
+  top: 1.8px;
+}
+
+.clue-btn svg.lampara {
+  height: 30px;
 }

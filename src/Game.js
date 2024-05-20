@@ -6,6 +6,7 @@ import { ReactComponent as Cuadrado } from "./img/cuadrado.svg";
 import { ReactComponent as Cruz } from "./img/cruz.svg";
 import { ReactComponent as Visible} from "./img/visible.svg"
 import { ReactComponent as Oculto} from "./img/oculto.svg"
+import { ReactComponent as Lampara} from "./img/lampara.svg"
 
 let pengine;
 
@@ -17,7 +18,7 @@ function Game() {
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [useX, setUseX] = useState(false);
-  const [viewClues, setViewClues]= useState(false);
+  const [viewTable, setViewTable]= useState(false);
   const [rowSat, setRowSat] = useState([]);
   const [colSat, setColSat] = useState([]);
   const [statusText, setStatusText] = useState('Keep playing');
@@ -118,7 +119,7 @@ function completeGrid(grid){
   };
 
   const handleCheckboxClueChange = () => {
-    setViewClues((prev) => !prev);
+    setViewTable((prev) => !prev);
   };
 
   const ToggleButton = () => {
@@ -133,11 +134,11 @@ function completeGrid(grid){
     );
   };
 
-  const ToggleButtonClue = () => {
+  const ToggleButtonTable = () => {
     return (
-      <div className='toggle-clue-btn'>
-        <input className='toggle-clue-input' type='checkbox' id='switchToggleClue' onChange={handleCheckboxClueChange} checked={viewClues}/>
-        <label className='toggle-clue-label' htmlFor='switchToggleClue'>
+      <div className='toggle-table-btn'>
+        <input className='toggle-table-input' type='checkbox' id='switchToggleTable' onChange={handleCheckboxClueChange} checked={viewTable}/>
+        <label className='toggle-table-label' htmlFor='switchToggleTable'>
           <Visible className='visible'/>
           <Oculto className='oculto'/>
         </label>
@@ -145,7 +146,13 @@ function completeGrid(grid){
     );
   };
 
-  
+  const ButtonClue = () => {
+    return (
+      <button type='button' className='clue-btn'>
+        <Lampara className='lampara'/>
+      </button>
+    );
+  }
 
   return (
     <div className="game">
@@ -161,7 +168,8 @@ function completeGrid(grid){
         {statusText}
       </div>
       <ToggleButton/>
-      <ToggleButtonClue/>
+      <ToggleButtonTable/>
+      <ButtonClue/>
     </div>
   );
 }
