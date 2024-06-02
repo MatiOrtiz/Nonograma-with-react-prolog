@@ -42,7 +42,8 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 
 
 %Recupera el elemento N-esimo de una lista.
-getByIndex(0, [H| _Tail], H).	
+getByIndex(0, [H| _Tail], H).
+
 getByIndex(N, [_H| Tail], Item) :-
 	NS is N - 1,
 	getByIndex(NS, Tail, Item).
@@ -141,49 +142,64 @@ fillWithXs([H| Tail], [H| NewTail]):-
 
 
 /*
- proylcc: findSolution([["X", _ , _ , _ , _ ], 		
+ proylcc: findSolution(
+[["X", _ , _ , _ , _ ], 		
  ["X", _ ,"X", _ , _ ],
- ["X", _ , _ , _ , _ ],		% Grid
+ ["X", _ , _ , _ , _ ],
  ["#","#","#", _ , _ ],
  [ _ , _ ,"#","#","#"]], [[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]], Solution).
  */
 %Busca la solución para el nivel
-findSolution([H| _], RowsClues, ColsClues, FinalSolution):-
+findSolution([H| Tail], RowsClues, ColsClues, Solution):-
 	length(H, RowsSize),
-	solveAllRows(RowsSize,RowsSize, RowsClues, RSolution),
+	solveAllRows([H| Tail], RowsSize, RowsClues, RSolution),
 	reverse(RSolution, Solution),
-	checkStatus(RowsClues, ColsClues, Solution,Status), %Quizá hace un recorrido de más, se podría mejorar.
-	Status = 1,
-	completeGrid(Solution, FinalSolution). %Idem linea 154.
+	checkStatus(RowsClues, ColsClues, Solution,Status),
+	Status = 1.
 
-
-
-% proylcc:solveAllRows(5, 5, [[3], [1,2], [4], [5], [5]], Solution).
+/*
+ proylcc:solveAllRows(
+[ ["X", _ , _ , _ , _ ],
+  ["X", _ ,"X", _ , _ ],
+  ["X", _ , _ , _ , _ ],	
+  ["#","#","#", _ , _ ],
+  [ _ , _ ,"#","#","#"] ], 5,
+ [ [3], [1,2], [4], [5], [5] ], Solution).
+*/
 %Busca una combinación en la que se satisfagan todas las filas.
-solveAllRows(_ , 0, _, []).
+solveAllRows(_, 0, _,[]).
 
-solveAllRows(RowSize, RowN, RowsClues, [RowSolution| Rest]):-
+solveAllRows(Grid, RowN, RowsClues, [RowSolution| Rest]):-
 	RowNS is RowN - 1,
-	solveRow(RowSize, RowNS, RowsClues, RowSolution),
-	solveAllRows(RowSize, RowNS, RowsClues, Rest).	
+	getByIndex(RowNS, Grid, Row),
+	getByIndex(RowNS, RowsClues, Clues),
+	solveRow(Row, Clues, RowSolution),
+	solveAllRows(Grid, RowNS, RowsClues, Rest).	
 
 
-% proylcc:solveRow(5, 0, [[3], [1,2], [4], [5], [5]], RowSolution).
+% proylcc:solveRow(["X", _ ,"X", _ , _ ], [1,2], RowSolution).
 %Busca las posibles soluciones para una fila.
-solveRow(RowSize, RowN, RowsClues, RowSolution):-
-	getByIndex(RowN, RowsClues, Clues),
-	generateLine(RowSize, RowSolution),
-	lineCounter(RowSolution, [], List),
+solveRow(Row, Clues, RowSolution):-
+	lineCounter(Row, [], List),
 	checkLineSat(List, Clues, LineSat),
-	LineSat = 1.
+	(LineSat \= 1 ->
+		generateLine(Row, RowSolution),
+		lineCounter(RowSolution, [], NList),
+		checkLineSat(NList, Clues, NLineSat),
+		NLineSat = 1).
+	
 
+%proylcc:generateLine(["X", _ , _ , _ , _ ], Sol). 
+generateLine(Line, LineSolution) :-
+    generateLineRec(Line, LineSolution).
 
-generateLine(N, Line) :-
-    length(Line, N),		%Crea una lista vacía de N elementos
-    generateLineRec(Line).
+/*
+Genera todas las posibles combinaciones de una línea.
+%NOTA: Se asume que la consulta al predicado se realiza cada vez que el nivel inicia, por lo tanto
+	Las "X" o "#" forman parte de la solución(Están correctamente ubicadas).
+*/
+generateLineRec([],[]).
 
-%Genera todas las posibles combinaciones de una línea.
-generateLineRec([]).
-generateLineRec([H|T]) :-
-    member(H, ["#", _]),      %Cada posición puede ser # o _
-    generateLineRec(T).       %Genera recursivamente el resto de la lista
+generateLineRec([H|T], [H| Rest]) :-
+	member(H, ["#", "X"]),      %Cada posición puede ser # o X
+    generateLineRec(T, Rest).       %Genera recursivamente el resto de la lista
