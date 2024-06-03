@@ -281,7 +281,7 @@ body {
 .solution-text{
   position: fixed;
   top: 100px;
-  right: 95px;
+  left: 355px;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   color: rgb(27, 136, 156);
 }
