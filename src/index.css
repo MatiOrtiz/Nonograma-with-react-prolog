@@ -49,6 +49,7 @@ body {
 
 .colClues {
   display: grid;
+  margin-top: 60px;
 }
 
 .clue {
@@ -95,14 +96,15 @@ body {
 }
 
 .game-info {
+  position: fixed;
   top: 50px;
   margin-left: 20px;
 }
 
 .toggle-btn {
-  position: relative;
-  top: 270px;
-  right: 229px;
+  position: fixed;
+  top: 350px;
+  left: 165px;
 }
 
 .toggle-label {
@@ -173,9 +175,9 @@ body {
 }
 
 .toggle-table-btn{
-  position: relative;
-  top: 270px;
-  right: 375px;
+  position: fixed;
+  top: 350px;
+  left: 85px;
 }
 
 .toggle-table-label{
@@ -227,24 +229,25 @@ body {
   width: 25px;
 }
 
-.toggle-table-label svg.visible {
+.toggle-table-label svg.oculto {
   height: 20px;
   top: 6px;
   left: 35px;
-  fill: #000000;
+  fill: #878381;
   transition: 0.3s;
 }
-.toggle-table-label svg.oculto {
+.toggle-table-label svg.visible {
   height: 20px;
   top: 5px;
   left: 5px;
+  
   fill: #7e7e7e;
   transition: 0.3s;
 }
-.toggle-table-input:checked + .toggle-table-label svg.visible {
+.toggle-table-input:checked + .toggle-table-label svg.oculto {
   fill: #7e7e7e;
 }
-.toggle-table-input:checked + .toggle-table-label svg.oculto {
+.toggle-table-input:checked + .toggle-table-label svg.visible {
   fill: #fff;
 }
 
@@ -253,9 +256,9 @@ body {
   width: 40px;
   border-radius: 100%;
   border-color: #fffab77d;
-  position: relative;
-  top: 283px;
-  right: 280px;
+  position: fixed;
+  top: 363px;
+  left: 250px;
   background: #FFFAB7;
 }
 
@@ -268,4 +271,19 @@ body {
 
 .clue-btn svg.lampara {
   height: 30px;
+}
+
+.solution-board{
+  display: grid;
+  margin-top: 110px;
+}
+
+.game-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.game-section {
+  flex: 1;
+  margin: 10px;
 }

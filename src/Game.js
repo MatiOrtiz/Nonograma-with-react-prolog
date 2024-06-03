@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
+import SolutionBoard from './SolutionBoard';
 import { ReactComponent as Cuadrado } from "./img/cuadrado.svg";
 import { ReactComponent as Cruz } from "./img/cruz.svg";
 import { ReactComponent as Visible} from "./img/visible.svg"
@@ -38,27 +39,24 @@ function Game() {
     const queryS = 'init(RowClues, ColumClues, Grid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
-        const initialGrid = response['Grid'];
-        const initialRowClues = response['RowClues'];
-        const initialColClues = response['ColumClues'];
-
-        setGrid(initialGrid);
-        setRowsClues(initialRowClues);
-        setColsClues(initialColClues);
-        fetchSolution(initialGrid, initialRowClues, initialColClues);
+        setGrid(response['Grid']);
+            setRowsClues(response['RowClues']);
+            setColsClues(response['ColumClues']);
+            fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
       }
     });
   }
 
   function fetchSolution(initialGrid, initialRowClues, initialColClues) {
-    const initialGridS = JSON.stringify(initialGrid).replaceAll('"_"', '_');
-    const initialRowsCluesS = JSON.stringify(initialRowClues);
-    const initialColsCluesS = JSON.stringify(initialColClues);
-    const findSolutionQuery = `findSolution(${initialGridS}, ${initialRowsCluesS}, ${initialColsCluesS}, Solution)`;
-    pengine.query(findSolutionQuery, (success, response) => {
-      if (success) {
-        setSolution(response['Solution']);
-      }
+    const gridS = JSON.stringify(initialGrid).replaceAll('"_"', '_');
+    const rowsCluesS = JSON.stringify(initialRowClues);
+    const colsCluesS = JSON.stringify(initialColClues);
+    const queryS = `findSolution(${gridS}, ${rowsCluesS}, ${colsCluesS}, Solution)`;
+
+    pengine.query(queryS, (success, response) => {
+        if (success) {
+            setSolution(response['Solution']);
+        }
     });
   }
 
@@ -174,17 +172,24 @@ function completeGrid(grid){
 
   return (
     <div className="game">
-      <Board
-        grid={grid}
-        rowsClues={rowsClues}
-        colsClues={colsClues}
-        onClick={(i, j) => handleClick(i, j)}
-        rowSat={rowSat}
-        colSat={colSat}
-      />
       <div className="game-info">
         {statusText}
       </div>
+      <Board 
+        grid={grid} 
+        rowsClues={rowsClues} 
+        colsClues={colsClues} 
+        onClick={handleClick} 
+        rowSat={rowSat} 
+        colSat={colSat} 
+      />
+      {viewTable && (
+        <div className="game-section">
+          <SolutionBoard 
+            solution={solution} 
+          />
+        </div>
+      )}
       <ToggleButton/>
       <ToggleButtonTable/>
       <ButtonClue/>
