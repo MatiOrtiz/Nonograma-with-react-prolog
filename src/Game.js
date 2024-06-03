@@ -25,6 +25,8 @@ function Game() {
   const [statusText, setStatusText] = useState('Keep playing');
   const [handleClickEnabled, setHandleClickEnabled] = useState(true);
   const [solution, setSolution] = useState(null);
+  const [lastSelectedPosition, setLastSelectedPosition] = useState(false);
+  const [waitForClick, setWaitForClick] = useState(false);
 
 
   useEffect(() => {
@@ -40,9 +42,9 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
-            setRowsClues(response['RowClues']);
-            setColsClues(response['ColumClues']);
-            fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
+        setRowsClues(response['RowClues']);
+        setColsClues(response['ColumClues']);
+        fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
       }
     });
   }
@@ -87,11 +89,32 @@ function Game() {
           setColSat(colSat.filter(e => e !== j));
         }
         checkGameStatus(response['ResGrid']);
+
+        // Actualizar la última posición seleccionada después de completar la consulta
+        setLastSelectedPosition({ row: i, col: j });
       }
       setWaiting(false);
     });
-    
-    
+    setWaitForClick(false);
+  }
+
+  function handleButtonClueClick() {
+    // Verificar si waitForClick es true para evitar la ejecución de handleButtonClueClick
+    if (waitForClick) {
+      return;
+    }
+
+    if (lastSelectedPosition && solution) {
+      const { row, col } = lastSelectedPosition;
+      const solutionCell = solution[row][col];
+      const currentGridCell = grid[row][col];
+
+      if (solutionCell !== currentGridCell) {
+        const newGrid = [...grid];
+        newGrid[row][col] = solutionCell;
+        setGrid(newGrid);
+      }
+    }
   }
 
 
@@ -164,7 +187,7 @@ function completeGrid(grid){
 
   const ButtonClue = () => {
     return (
-      <button type='button' className='clue-btn'>
+      <button type='button' className='clue-btn' onClick={handleButtonClueClick} checked={lastSelectedPosition}>
         <Lampara className='lampara'/>
       </button>
     );
