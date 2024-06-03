@@ -185,6 +185,9 @@ function completeGrid(grid){
       />
       {viewTable && (
         <div className="game-section">
+          <div className='solution-text'>
+            {'SOLUTION'}
+          </div>
           <SolutionBoard 
             solution={solution} 
           />

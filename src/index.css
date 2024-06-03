@@ -97,7 +97,7 @@ body {
 
 .game-info {
   position: fixed;
-  top: 50px;
+  top: 30px;
   margin-left: 20px;
 }
 
@@ -273,17 +273,20 @@ body {
   height: 30px;
 }
 
-.solution-board{
-  display: grid;
-  margin-top: 110px;
-}
-
-.game-container {
-  display: flex;
-  justify-content: space-around;
-}
-
 .game-section {
   flex: 1;
   margin: 10px;
+}
+
+.solution-text{
+  position: fixed;
+  top: 100px;
+  right: 95px;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(27, 136, 156);
+}
+
+.solution-board{
+  display: grid;
+  margin-top: 110px;
 }
