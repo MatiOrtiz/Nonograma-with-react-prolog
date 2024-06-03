@@ -23,6 +23,7 @@ function Game() {
   const [colSat, setColSat] = useState([]);
   const [statusText, setStatusText] = useState('Keep playing');
   const [handleClickEnabled, setHandleClickEnabled] = useState(true);
+  const [solution, setSolution] = useState(null);
 
 
   useEffect(() => {
@@ -37,9 +38,26 @@ function Game() {
     const queryS = 'init(RowClues, ColumClues, Grid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
-        setGrid(response['Grid']);
-        setRowsClues(response['RowClues']);
-        setColsClues(response['ColumClues']);
+        const initialGrid = response['Grid'];
+        const initialRowClues = response['RowClues'];
+        const initialColClues = response['ColumClues'];
+
+        setGrid(initialGrid);
+        setRowsClues(initialRowClues);
+        setColsClues(initialColClues);
+        fetchSolution(initialGrid, initialRowClues, initialColClues);
+      }
+    });
+  }
+
+  function fetchSolution(initialGrid, initialRowClues, initialColClues) {
+    const initialGridS = JSON.stringify(initialGrid).replaceAll('"_"', '_');
+    const initialRowsCluesS = JSON.stringify(initialRowClues);
+    const initialColsCluesS = JSON.stringify(initialColClues);
+    const findSolutionQuery = `findSolution(${initialGridS}, ${initialRowsCluesS}, ${initialColsCluesS}, Solution)`;
+    pengine.query(findSolutionQuery, (success, response) => {
+      if (success) {
+        setSolution(response['Solution']);
       }
     });
   }
