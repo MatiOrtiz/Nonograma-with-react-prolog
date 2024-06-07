@@ -30,24 +30,24 @@ function Game() {
 
 
   useEffect(() => {
+    function handleServerReady(instance) {
+      pengine = instance;
+      const queryS = 'init(RowClues, ColumClues, Grid)';
+      pengine.query(queryS, (success, response) => {
+        if (success) {
+          setGrid(response['Grid']);
+          setRowsClues(response['RowClues']);
+          setColsClues(response['ColumClues']);
+          fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
+        }
+      });
+    }
     // Creation of the pengine server instance.    
     // This is executed just once, after the first render.    
     // The callback will run when the server is ready, and it stores the pengine instance in the pengine variable. 
     PengineClient.init(handleServerReady);
   }, []);
 
-  function handleServerReady(instance) {
-    pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid)';
-    pengine.query(queryS, (success, response) => {
-      if (success) {
-        setGrid(response['Grid']);
-        setRowsClues(response['RowClues']);
-        setColsClues(response['ColumClues']);
-        fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
-      }
-    });
-  }
 
   function fetchSolution(initialGrid, initialRowClues, initialColClues) {
     const gridS = JSON.stringify(initialGrid).replaceAll('"_"', '_');
