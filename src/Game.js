@@ -27,6 +27,7 @@ function Game() {
   const [solution, setSolution] = useState(null);
   const [lastSelectedPosition, setLastSelectedPosition] = useState(false);
   const [waitForClick, setWaitForClick] = useState(false);
+  const [clueClick, setClueClick] = useState(false);
 
 
   useEffect(() => {
@@ -69,52 +70,55 @@ function Game() {
     }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-    const content = useX ? 'X' : '#'; // Content to put in the clicked square.
+    let content = useX ? 'X' : '#'; // Content to put in the clicked square.
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
-    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
-    setWaiting(true);
-    pengine.query(queryS, (success, response) => {
-      if (success) {
-        setGrid(response['ResGrid']);
-  
-        if(response['RowSat']) {
-          setRowSat([...rowSat, i]);
-        } else {
-          setRowSat(rowSat.filter(e => e !== i));
-        }
-        if(response['ColSat']) {
-          setColSat([...colSat, j]);
-        } else {
-          setColSat(colSat.filter(e => e !== j));
-        }
-        checkGameStatus(response['ResGrid']);
+    if(clueClick){
+      content = solution[i][j];
+    }
+    //Si el botón revelar celda está habilitado, y el valor en i,j es correcto, entonces no debe hacer la inserción.
+    if(! (clueClick && content === grid[i][j])){
+      const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+      setWaiting(true);
+      pengine.query(queryS, (success, response) => {
+        if (success) {
+          setGrid(response['ResGrid']);
+    
+          if(response['RowSat']) {
+            setRowSat([...rowSat, i]);
+          } else {
+            setRowSat(rowSat.filter(e => e !== i));
+          }
+          if(response['ColSat']) {
+            setColSat([...colSat, j]);
+          } else {
+            setColSat(colSat.filter(e => e !== j));
+          }
+          checkGameStatus(response['ResGrid']);
 
-        // Actualizar la última posición seleccionada después de completar la consulta
-        setLastSelectedPosition({ row: i, col: j });
-      }
-      setWaiting(false);
-    });
+          // Actualizar la última posición seleccionada después de completar la consulta
+          setLastSelectedPosition({ row: i, col: j });
+        }
+        setWaiting(false);
+      });
+    }
     setWaitForClick(false);
+    handleButtonClueClick(false);  
   }
 
-  function handleButtonClueClick() {
+  function handleButtonClueClick(habilitacion) {
     // Verificar si waitForClick es true para evitar la ejecución de handleButtonClueClick
     if (waitForClick) {
       return;
     }
-
-    if (lastSelectedPosition && solution) {
-      const { row, col } = lastSelectedPosition;
-      const solutionCell = solution[row][col];
-      const currentGridCell = grid[row][col];
-
-      if (solutionCell !== currentGridCell) {
-        const newGrid = [...grid];
-        newGrid[row][col] = solutionCell;
-        setGrid(newGrid);
-      }
+    setClueClick(habilitacion);
+    if(habilitacion){
+      console.log("Boton pista habilitado");
     }
+    else{
+      console.log("Boton pista deshabilitado");
+    }
+    
   }
 
 
@@ -186,8 +190,9 @@ function completeGrid(grid){
   };
 
   const ButtonClue = () => {
+    const className = clueClick ? 'clue-btn-clicked' : 'clue-btn';
     return (
-      <button type='button' className='clue-btn' onClick={handleButtonClueClick} checked={lastSelectedPosition}>
+      <button type='button' className={className} onClick={handleButtonClueClick} checked={lastSelectedPosition}>
         <Lampara className='lampara'/>
       </button>
     );

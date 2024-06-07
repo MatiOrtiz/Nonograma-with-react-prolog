@@ -273,6 +273,29 @@ body {
   height: 30px;
 }
 
+.clue-btn-clicked{
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  border-color: #fffab77d;
+  position: fixed;
+  top: 363px;
+  left: 250px;
+  background: #aaa;
+}
+
+.clue-btn-clicked svg {
+  position: relative;
+  width: 30px;
+  right: 3px;
+  top: 1.8px;
+}
+
+.clue-btn-clicked svg.lampara {
+  height: 30px;
+}
+
+
 .game-section {
   flex: 1;
   margin: 10px;
