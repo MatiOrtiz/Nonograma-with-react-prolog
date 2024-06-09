@@ -187,7 +187,7 @@ solveRow(Row, Clues, RowSolution):-
 		lineCounter(RowSolution, [], NList),
 		checkLineSat(NList, Clues, NLineSat),
 		NLineSat = 1;
-		RowSolution= RowSat).
+		RowSolution= Row).
 	
 
 %proylcc:generateLine(["X", _ , _ , _ , _ ], Sol). 

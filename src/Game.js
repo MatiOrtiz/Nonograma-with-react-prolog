@@ -103,21 +103,17 @@ function Game() {
       });
     }
     setWaitForClick(false);
-    handleButtonClueClick(false);  
+    if(clueClick){
+      handleButtonClueClick(false); 
+    } 
   }
 
-  function handleButtonClueClick(habilitacion) {
+  function handleButtonClueClick() {
     // Verificar si waitForClick es true para evitar la ejecución de handleButtonClueClick
     if (waitForClick) {
       return;
     }
-    setClueClick(habilitacion);
-    if(habilitacion){
-      console.log("Boton pista habilitado");
-    }
-    else{
-      console.log("Boton pista deshabilitado");
-    }
+    setClueClick((prev) => !prev);
     
   }
 
