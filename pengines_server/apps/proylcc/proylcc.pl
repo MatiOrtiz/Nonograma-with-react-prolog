@@ -49,6 +49,12 @@ getByIndex(N, [_H| Tail], Item) :-
 	getByIndex(NS, Tail, Item).
 
 
+% Verificar las filas y columnas satisfechas.
+check_satisfactions(Grid, RowsClues, ColsClues, RowSatList, ColSatList) :-
+    findall(RowSat, (nth0(RowIndex, Grid, Row), rowSat(RowIndex, Row, RowsClues, RowSat)), RowSatList),
+    length(Grid, GridSize),
+    findall(ColSat, (between(0, GridSize, ColIndex), getColN(ColIndex, Grid, [], Col), colSat(ColIndex, Grid, ColsClues, ColSat)), ColSatList).
+
 %RowSat = 1 Si la fila N satisface las pistas.
 rowSat(RowN, Row, RowsClues, RowSat):-
 	getByIndex(RowN, RowsClues, Clues),
