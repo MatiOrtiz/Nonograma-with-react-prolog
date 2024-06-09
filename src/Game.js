@@ -40,6 +40,8 @@ function Game() {
           setRowsClues(response['RowClues']);
           setColsClues(response['ColumClues']);
           fetchSolution(response['Grid'], response['RowClues'], response['ColumClues']);
+
+          checkSatisfaction(response['Grid'], response['RowClues'], response['ColumClues']);
         }
       });
     }
@@ -61,6 +63,35 @@ function Game() {
             setSolution(response['Solution']);
         }
     });
+  }
+
+  function checkSatisfaction(grid, rowsClues, colsClues) {
+    const tempRowSat = [];
+    const tempColSat = [];
+
+    rowsClues.forEach((_, i) => {
+      const row = JSON.stringify(grid[i]).replaceAll('"_"', '_');
+      const queryRowSat = `rowSat(${i}, ${row}, ${JSON.stringify(rowsClues)}, RowSat)`;
+      pengine.query(queryRowSat, (success, response) => {
+        if (success && response['RowSat'] === 1) {
+          tempRowSat.push(i);
+        }
+      });
+    });
+    
+    colsClues.forEach((_, j) => {
+      const colS = JSON.stringify(grid).replaceAll('"_"', '_');
+      const queryColSat = `colSat(${j}, ${colS}, ${JSON.stringify(colsClues)}, ColSat)`;
+      pengine.query(queryColSat, (success, response) => {
+        if (success && response['ColSat'] === 1) {
+          tempColSat.push(j);
+        }
+      });
+    });
+
+    setRowSat(tempRowSat);
+    setColSat(tempColSat);
+
   }
 
   function handleClick(i, j) {
