@@ -70,31 +70,40 @@ function Game() {
   function checkSatisfaction(grid, rowsClues, colsClues) {
     const tempRowSat = [];
     const tempColSat = [];
-
-    rowsClues.forEach((_, i) => {
+  
+    const rowPromises = rowsClues.map((_, i) => {
       const row = JSON.stringify(grid[i]).replaceAll('"_"', '_');
       const queryRowSat = `rowSat(${i}, ${row}, ${JSON.stringify(rowsClues)}, RowSat)`;
-      pengine.query(queryRowSat, (success, response) => {
-        if (success && response['RowSat'] === 1) {
-          tempRowSat.push(i);
-        }
+      return new Promise((resolve, reject) => {
+        pengine.query(queryRowSat, (success, response) => {
+          if (success && response['RowSat'] === 1) {
+            tempRowSat.push(i);
+          }
+          resolve();
+        });
       });
     });
-    
-    colsClues.forEach((_, j) => {
+  
+    const colPromises = colsClues.map((_, j) => {
       const colS = JSON.stringify(grid).replaceAll('"_"', '_');
       const queryColSat = `colSat(${j}, ${colS}, ${JSON.stringify(colsClues)}, ColSat)`;
-      pengine.query(queryColSat, (success, response) => {
-        if (success && response['ColSat'] === 1) {
-          tempColSat.push(j);
-        }
+      return new Promise((resolve, reject) => {
+        pengine.query(queryColSat, (success, response) => {
+          if (success && response['ColSat'] === 1) {
+            tempColSat.push(j);
+          }
+          resolve();
+        });
       });
     });
-
-    setRowSat(tempRowSat);
-    setColSat(tempColSat);
-
+  
+    // Wait for all queries to complete before updating the state
+    Promise.all([...rowPromises, ...colPromises]).then(() => {
+      setRowSat(tempRowSat);
+      setColSat(tempColSat);
+    });
   }
+  
 
   function handleClick(i, j) {
     // No action on click if we are waiting.
