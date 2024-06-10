@@ -240,7 +240,6 @@ body {
   height: 20px;
   top: 5px;
   left: 5px;
-  
   fill: #7e7e7e;
   transition: 0.3s;
 }
@@ -249,6 +248,16 @@ body {
 }
 .toggle-table-input:checked + .toggle-table-label svg.visible {
   fill: #fff;
+}
+.toggle-table-input:disabled + .toggle-table-label {
+  background: #d3d3d3; /* Cambia el color de fondo para indicar que está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor para indicar que está deshabilitado */
+}
+.toggle-table-input:disabled + .toggle-table-label:after {
+  background: #a9a9a9; /* Cambia el color del botón deslizante */
+}
+.toggle-table-input:disabled + .toggle-table-label svg {
+  fill: #a9a9a9; /* Cambia el color de los íconos */
 }
 
 .clue-btn{
@@ -290,10 +299,18 @@ body {
   right: 3px;
   top: 1.8px;
 }
-
 .clue-btn-clicked svg.lampara {
   height: 30px;
 }
+.clue-btn:disabled {
+  background: #d3d3d3; /* Cambia el color de fondo para indicar que está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor para indicar que está deshabilitado */
+  border-color: #d3d3d3; /* Cambia el color del borde para indicar que está deshabilitado */
+}
+.clue-btn:disabled svg {
+  fill: #a9a9a9; /* Cambia el color del ícono */
+}
+
 
 
 .game-section {

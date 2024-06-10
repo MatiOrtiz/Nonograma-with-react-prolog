@@ -28,6 +28,7 @@ function Game() {
   const [lastSelectedPosition, setLastSelectedPosition] = useState(false);
   const [waitForClick, setWaitForClick] = useState(false);
   const [clueClick, setClueClick] = useState(false);
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
 
   useEffect(() => {
@@ -61,6 +62,7 @@ function Game() {
     pengine.query(queryS, (success, response) => {
         if (success) {
             setSolution(response['Solution']);
+            setButtonsDisabled(false);
         }
     });
   }
@@ -208,7 +210,7 @@ function completeGrid(grid){
   const ToggleButtonTable = () => {
     return (
       <div className='toggle-table-btn'>
-        <input className='toggle-table-input' type='checkbox' id='switchToggleTable' onChange={handleCheckboxClueChange} checked={viewTable}/>
+        <input className='toggle-table-input' type='checkbox' id='switchToggleTable' onChange={handleCheckboxClueChange} checked={viewTable} disabled={buttonsDisabled}/>
         <label className='toggle-table-label' htmlFor='switchToggleTable'>
           <Visible className='visible'/>
           <Oculto className='oculto'/>
@@ -220,7 +222,7 @@ function completeGrid(grid){
   const ButtonClue = () => {
     const className = clueClick ? 'clue-btn-clicked' : 'clue-btn';
     return (
-      <button type='button' className={className} onClick={handleButtonClueClick} checked={lastSelectedPosition}>
+      <button type='button' className={className} onClick={handleButtonClueClick} checked={lastSelectedPosition} disabled={buttonsDisabled}>
         <Lampara className='lampara'/>
       </button>
     );
