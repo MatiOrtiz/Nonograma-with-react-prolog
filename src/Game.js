@@ -28,7 +28,7 @@ function Game() {
   const [lastSelectedPosition, setLastSelectedPosition] = useState(false);
   const [waitForClick, setWaitForClick] = useState(false);
   const [clueClick, setClueClick] = useState(false);
-  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [buttonsDisabled, setButtonsDisabled] = useState(true);
 
 
   useEffect(() => {
