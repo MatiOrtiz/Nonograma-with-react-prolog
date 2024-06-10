@@ -190,6 +190,7 @@ function completeGrid(grid){
 
   const handleCheckboxClueChange = () => {
     setViewTable((prev) => !prev);
+    setHandleClickEnabled((prev)=> !prev);
   };
 
   const ToggleButton = () => {
