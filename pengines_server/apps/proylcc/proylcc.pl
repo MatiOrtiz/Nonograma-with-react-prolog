@@ -147,14 +147,7 @@ fillWithXs([H| Tail], [H| NewTail]):-
 
 
 
-/*
- proylcc: findSolution(
-[["X", _ , _ , _ , _ ], 		
- ["X", _ ,"X", _ , _ ],
- ["X", _ , _ , _ , _ ],
- ["#","#","#", _ , _ ],
- [ "#" , "#" ,"#","#","#"]], [[3], [1,2], [4], [5], [5]], [[2], [5], [1,3], [5], [4]], Solution).
- */
+
 %Busca la solución para el nivel
 findSolution([H| Tail], RowsClues, ColsClues, Solution):-
 	length(H, RowsSize),
@@ -163,15 +156,7 @@ findSolution([H| Tail], RowsClues, ColsClues, Solution):-
 	checkStatus(RowsClues, ColsClues, Solution,Status),
 	Status = 1.
 
-/*
- proylcc:solveAllRows(
-[ ["X", _ , _ , _ , _ ],
-  ["X", _ ,"X", _ , _ ],
-  ["X", _ , _ , _ , _ ],	
-  ["#","#","#", _ , _ ],
-  [ "#" , "#" ,"#","#","#"] ], 5,
- [ [3], [1,2], [4], [5], [5] ], Solution).
-*/
+
 %Busca una combinación en la que se satisfagan todas las filas.
 solveAllRows(_, 0, _,[]).
 
@@ -183,7 +168,6 @@ solveAllRows(Grid, RowN, RowsClues, [RowSolution| Rest]):-
 	solveAllRows(Grid, RowNS, RowsClues, Rest).	
 
 
-% proylcc:solveRow(["X", "#" ,"X", "#" , "#" ], [1,2], RowSolution).
 %Busca las posibles soluciones para una fila.
 solveRow(Row, Clues, RowSolution):-
 	lineCounter(Row, [], List),
@@ -196,7 +180,6 @@ solveRow(Row, Clues, RowSolution):-
 		RowSolution= Row).
 	
 
-%proylcc:generateLine(["X", _ , _ , _ , _ ], Sol). 
 generateLine(Line, LineSolution) :-
     generateLineRec(Line, LineSolution).
 
